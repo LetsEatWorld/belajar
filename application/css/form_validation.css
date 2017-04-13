@@ -1,0 +1,13 @@
+.contain {
+    margin-left: 30px;
+}
+table, tr td {
+    border: 1px dashed #ccc;
+}
+tr td {
+    padding: 10px;;
+}
+.container {
+    margin: 0 auto;
+    width: 800px;;
+}
