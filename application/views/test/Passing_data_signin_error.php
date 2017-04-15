@@ -26,29 +26,15 @@
 </nav>
 <div class="container">
     <div class="container">
-        <h2>Log In</h2>
-        <form class="form-horizontal" action="<?=base_url()?>test/passing_data/signin" method="post">
-            <div class="form-group">
-                <label class="control-label col-sm-2" for="userid">User ID:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="userid" name="userid" placeholder="Enter User ID">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-2" for="pass">Password:</label>
-                <div class="col-sm-10">
-                    <input type="password" class="form-control" id="pass" name="pass" placeholder="Enter Password">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </div>
-            </div>
-        </form>
+        <h2>Failed to log in</h2>
+        <hr>
+        <p>
+            Your User ID or Password you submit was incorrect! <br>
+            Please
+            <a href="">Try again</a>
+        </p>
     </div>
-    <hr>
-    <?= validation_errors(); ?>
+
 </div>
 </body>
 </html>

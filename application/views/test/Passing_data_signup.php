@@ -60,7 +60,7 @@
             </form>
         </div>
         <hr>
-
+        <?= validation_errors(); ?>
     </div>
 </body>
 </html>

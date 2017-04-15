@@ -110,26 +110,32 @@
             $this->load->model('test/Passing_data_model');
             $id = $this->input->post('userid');
             $pass = $this->input->post('pass');
+            $this->form_validation->set_rules('userid', 'User ID', 'required');
+            $this->form_validation->set_rules('pass', 'Password', 'required');
             $row = $this->Passing_data_model->select_user_where($id, md5($pass)); //MD5
             /*echo $id . " " . $pass . "<br>";
             echo count($row);*/
-            if (count($row) > 0) {
-                $this->session->set_userdata(array('logged_in' => TRUE, 'user_id' => $id));
-                redirect('passdata');
+            if ($this->form_validation->run() == FALSE) {
+                $this->load->view('test/Passing_data_signin');
             } else {
-                //$this->load->view('test/Passing_data/signin_page');
-                redirect('/test/Passing_data/signin_page');
+                if (count($row) > 0) {
+                    $this->session->set_userdata(array('logged_in' => TRUE, 'user_id' => $id));
+                    redirect('passdata');
+                } else {
+                    //$this->load->view('test/Passing_data/signin_page');
+                    $this->load->view('test/Passing_data_signin_error');
+                }
             }
         }
         public function signup() {
             /*$this->load->library('form_validation');*/
             $this->load->model('test/Passing_data_model');
             $this->form_validation->set_rules('userid', 'User ID', 'required');
+            $this->form_validation->set_rules('name', 'Name', 'required');
             $this->form_validation->set_rules('pass', 'Password', 'required');
             $this->form_validation->set_rules('repass', 'Password Confirmation', 'required|matches[pass]');
             if ($this->form_validation->run() == FALSE) {
-                echo "tset";
-                redirect('test/passing_data/signup_page');
+                $this->load->view('test/Passing_data_signup');
             } else {
                 $id = $this->input->post('userid');
                 $name = $this->input->post('name');
@@ -138,15 +144,12 @@
                 redirect('passdata');
             }
         }
-        public function signup_page() {
-            $this->load->view('test/Passing_data_signup');
-        }
-        public function signin_page() {
-            $this->load->view('test/Passing_data_signin');
-        }
         public function signout() {
             $this->session->unset_userdata(array('logged_in','user_id'));
             redirect('passdata');
+        }
+        public function login_page() {
+            $this->load->view('test/Passing_data_signin');
         }
     }
 ?>
