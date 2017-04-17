@@ -10,17 +10,25 @@ class Passing_data_model extends CI_Model {
         $query = $this->db->get();//untuk result array
         return $result = $query->result_array();
     }
-    public function insert_status($user_id, $status, $date) {
+    public function insert_status($email, $status, $date) {
+        $this->db->select('user_id');
+        $this->db->from('user');
+        $this->db->where('email', $email);
+        $user_id = $this->db->get()->row_array();
         $data = array(
-            'user_id' => $user_id,
+            'user_id' => $user_id['user_id'],
             'message' => $status,
             'tanggal' => $date
         );
         $this->db->insert('status', $data);
     }
-    public function insert_comment($user_id, $comment, $date, $status_id) {
+    public function insert_comment($email, $comment, $date, $status_id) {
+        $this->db->select('user_id');
+        $this->db->from('user');
+        $this->db->where('email', $email);
+        $user_id = $this->db->get()->row_array();
         $data = array(
-            'user_id' => $user_id,
+            'user_id' => $user_id['user_id'],
             'message' => $comment,
             'tanggal' => $date,
             'status_id' => $status_id
@@ -48,20 +56,29 @@ class Passing_data_model extends CI_Model {
         $query['result_object'] = $this->db->get('status')->result();*/
         return $query;
     }
-    public function join_status_comment($id = -1)
+    public function join_status_comment_user($id = -1)
     {
-        $this->db->select('status.tanggal as s_tgl');
-        $this->db->select('comment.tanggal as c_tgl');
-        $this->db->select('status.message as s_msg');
-        $this->db->select('comment.message as c_msg');
-        $this->db->select('comment.status_id as c_sid');
-        $this->db->select('comment.comment_id as c_id');
-        $this->db->select('comment.user_id as c_uid');
+        $this->db->select('status.tanggal as s_tgl, comment.tanggal as c_tgl, status.message as s_msg,
+        status.message as s_msg, comment.message as c_msg,comment.status_id as c_sid, comment.comment_id as c_id,
+        comment.user_id as c_uid, comment.tanggal as c_tgl,user.name as u_name, user.email as u_email');
         $this->db->from('status');
-        $this->db->join('comment','comment.status_id=status.status_id');
+        $this->db->join('comment', 'comment.status_id=status.status_id');
+        $this->db->join('user', 'user.user_id=comment.user_id');
         if ($id != -1)
             $this->db->where('status.status_id',$id);
         $query=$this->db->get()->result_array();
+        /*echo "<pre>";
+        print_r($query);
+        echo "</pre>";*/
+        return $query;
+    }
+    public function join_status_user() {
+        $this->db->select('*');
+        $this->db->join('user', 'user.user_id=status.user_id');
+        $query = $this->db->get('status')->result_array();
+        /*echo "<pre>";
+        print_r($query);
+        echo "</pre>";*/
         return $query;
     }
     public function del_comment_where($id) {
@@ -76,16 +93,16 @@ class Passing_data_model extends CI_Model {
         $this->db->where('status_id',$id);
         $this->db->delete('comment');
     }
-    public function select_user_where($id, $pass) {
+    public function select_user_where($email, $pass) {
         $this->db->select('*');
-        $this->db->where('user.user_id', $id);
+        $this->db->where('user.email', $email);
         $this->db->where('user.pass', $pass);
         $query = $this->db->get('user')->row_array();
         return $query;
     }
-    public function insert_user($id, $name, $pass) {
+    public function insert_user($email, $name, $pass) {
         $data = array(
-                'user_id' => $id,
+                'email' => $email,
                 'name' => $name,
                 'pass' => $pass
         );

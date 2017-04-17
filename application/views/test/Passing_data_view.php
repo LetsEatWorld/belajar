@@ -53,7 +53,11 @@
             background-color: white;
             animation-name: hovered;
             animation-duration: 1s;
-            animation-timing-function: ease-out
+            animation-timing-function: ease-out;
+        }
+        .tanggal {
+            font-family: Calibri;
+            font-size: 10px;
         }
     </style>
 </head>
@@ -65,7 +69,7 @@
                 <a class="navbar-brand" href="#">Facebook</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span> <?= $this->session->user_id; ?></a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> <?= $this->session->email; ?></a></li>
                 <li><a href="<?=base_url()?>test/Passing_data/signout"><span class="glyphicon glyphicon-log-in""></span> Logout</a></li>
             </ul>
         </div>
@@ -96,12 +100,12 @@
                 <div class="modal-body">
                     <form action="<?=base_url()?>test/passing_data/signin" method="post">
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input id="userid" type="text" class="form-control" name="userid" placeholder="User ID">
+                            <span class="input-group-addon">@</span>
+                            <input id="email" type="text" class="form-control" name="email" placeholder="Enter your email">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                            <input id="password" type="password" class="form-control" name="pass" placeholder="Password">
+                            <input id="password" type="password" class="form-control" name="pass" placeholder="Enter your password">
                         </div>
                         <br>
                         <Input type="Submit" class="btn btn-primary btn-block" value="Log In">
@@ -113,6 +117,7 @@
             </div>
         </div>
     </div>
+
     <!-- Modal -->
     <div class="modal fade" id="signup" role="dialog">
         <div class="modal-dialog">
@@ -126,15 +131,15 @@
                     <form action="<?=base_url()?>test/passing_data/signup" method="post">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input id="user-id" type="text" class="form-control" name="userid" placeholder="User ID">
+                            <input id="name" type="text" class="form-control" name="name" placeholder="Enter your name">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon">@</span>
-                            <input id="name" type="text" class="form-control" name="name" placeholder="Name">
+                            <input id="email" type="email" class="form-control" name="email" placeholder="Enter your email">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                            <input id="pass" type="password" class="form-control" name="pass" placeholder="Password">
+                            <input id="pass" type="password" class="form-control" name="pass" placeholder="Enter your password">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
@@ -150,6 +155,7 @@
             </div>
         </div>
     </div>
+    <?php if($this->session->logged_in) { ?>
     <div class="form-group">
         <form action="<?= base_url(); ?>passdata/getstatus" method="post">
             <label for="status">Status : </label>
@@ -157,6 +163,15 @@
             <input type="submit" class="btn btn-primary status-btn" id="submit" value="Post">
         </form>
     </div>
+    <?php } else { ?>
+    <div class="form-group">
+        <form action="<?= base_url(); ?>test/Passing_data/login_page" method="post">
+            <label for="status">Status : </label>
+            <input type="text" class="form-control" name="status" placeholder="Apakah yang anda pikirkan?">
+            <input type="submit" class="btn btn-primary status-btn" id="submit" value="Post">
+        </form>
+    </div>
+    <?php } ?>
     <div class="panel panel-default">
         <div class="panel-body">
             <button type="button" class="btn btn-primary">Timeline <span class="badge"><?= count($status)?></span></button>
@@ -166,20 +181,25 @@
                <div class="timeline">
                    <a href="#"><?/*= base_url(); */?><!--test/Passing_data/status_detail/--><?/*=$s['status_id'];*/?>
                     <h1><?= $s['message'] ?></h1>
-                    <span><?= $s['tanggal'] ?></span>
-                    <span><?= "(ID = " . $s['status_id'] . ")" ?></span>
-                    <span><?= "(Status updated by = " . $s['user_id'] . ")" ?></span>
+                    <span><?= "Status updated by " . $s['name'] ?></span>
+                    <span class="tanggal"><?= $s['tanggal'] ?></span>
                    </a>
-                   <a href="<?=base_url(); ?>test/passing_data/del_status/<?=$s['status_id']?>" class="delete"> remove status</a>
+                   <?php if ($s['email'] == $this->session->email) { ?>
+                        <a href="<?=base_url(); ?>test/passing_data/del_status/<?=$s['status_id']?>" class="delete"> remove status </a>
+                   <?php } ?>
                 </div>
                 <div class="comment-list">
                     <?php foreach ($status_comment as $sc):?>
                         <?php
+                        /*echo $this->session->email . " " . $sc['u_email'];*/
                         if($s['status_id'] == $sc['c_sid']) {
                             echo "<div>";
                                 echo "<h3>" . $sc['c_msg'] . "</h3>";
-                                echo "<span>" . $sc['c_uid'] . "</span>";
-                                echo "<a href=\"" .  base_url() . "test/passing_data/del_comment/" . $sc['c_id'] . "\"". "class=\"delete\">delete comment</a>";
+                                echo "<span> Posted by " . $sc['u_name'] . " </span>";
+                                echo "<span class=\"tanggal\">" . $sc['c_tgl'] . "</span>";
+                                if ($sc['u_email'] == $this->session->email) {
+                                    echo "<a href=\"" . base_url() . "test/passing_data/del_comment/" . $sc['c_id'] . "\"" . "class=\"delete\">delete</a>";
+                                }
                                 echo "<hr>";
                             echo "</div>";
                         }

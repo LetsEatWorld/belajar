@@ -7,12 +7,12 @@
         public function index() {
             //$this->load->helper('url');
             $this->load->model('test/Passing_data_model');
-            $status = $this->Passing_data_model->select_status();
+            $status = $this->Passing_data_model->join_status_user();
             /*echo "<pre>";
             print_r($this->Passing_data_model->join_status_comment(151));
             echo "</pre>";*/
             $data['status'] = $status;
-            $data['status_comment'] = $this->Passing_data_model->join_status_comment();
+            $data['status_comment'] = $this->Passing_data_model->join_status_comment_user();
             $this->load->view('test/Passing_data_view', $data);
         }
         public function get_status() {
@@ -26,7 +26,7 @@
             } else {
                 $this->load->helper('date');
                 $status = $this->input->post('status');
-                $this->Passing_data_model->insert_status($this->session->user_id, $status, date('Y-m-d H:i:s'));
+                $this->Passing_data_model->insert_status($this->session->email, $status, date('Y-m-d H:i'));
                 redirect('passdata');
             }
         }
@@ -59,7 +59,7 @@
             } else {
                 $this->load->helper('date');
                 $comment = $this->input->post('comment');
-                $this->Passing_data_model->insert_comment($this->session->user_id, $comment, date('Y-m-d H:i:s'), $id);
+                $this->Passing_data_model->insert_comment($this->session->email, $comment, date('Y-m-d H:i'), $id);
                 redirect('passdata/');
             }
         }
@@ -70,7 +70,7 @@
             //echo $id;
             $this->Passing_data_model->del_comment_where($id);
             $data['status'] = $this->Passing_data_model->select_status_where($this->session->userdata('recent_id'));
-            $data['status_comment'] = $this->Passing_data_model->join_status_comment($this->session->userdata('current_status_id'));
+            $data['status_comment'] = $this->Passing_data_model->join_status_comment_user($this->session->userdata('current_status_id'));
             $data['id'] = $this->session->userdata('recent_id');
             //echo $this->session->userdata('recent_id');
             //redirect('/test/passing_data/status_detail/');
@@ -108,18 +108,18 @@
         public function signin () {
             /*$this->load->library('form_validation');*/
             $this->load->model('test/Passing_data_model');
-            $id = $this->input->post('userid');
+            $email = $this->input->post('email');
             $pass = $this->input->post('pass');
-            $this->form_validation->set_rules('userid', 'User ID', 'required');
-            $this->form_validation->set_rules('pass', 'Password', 'required');
-            $row = $this->Passing_data_model->select_user_where($id, md5($pass)); //MD5
+            $this->form_validation->set_rules('email', 'Your email', 'required');
+            $this->form_validation->set_rules('pass', 'Your password', 'required');
+            $row = $this->Passing_data_model->select_user_where($email, md5($pass)); //MD5
             /*echo $id . " " . $pass . "<br>";
             echo count($row);*/
             if ($this->form_validation->run() == FALSE) {
                 $this->load->view('test/Passing_data_signin');
             } else {
                 if (count($row) > 0) {
-                    $this->session->set_userdata(array('logged_in' => TRUE, 'user_id' => $id));
+                    $this->session->set_userdata(array('logged_in' => TRUE, 'email' => $email));
                     redirect('passdata');
                 } else {
                     //$this->load->view('test/Passing_data/signin_page');
@@ -130,23 +130,24 @@
         public function signup() {
             /*$this->load->library('form_validation');*/
             $this->load->model('test/Passing_data_model');
-            $this->form_validation->set_rules('userid', 'User ID', 'required');
+            $this->form_validation->set_rules('email', 'Email', 'required|is_unique[user.email]', array('Please enter your Email', 'Your email have been registered'));
             $this->form_validation->set_rules('name', 'Name', 'required');
             $this->form_validation->set_rules('pass', 'Password', 'required');
             $this->form_validation->set_rules('repass', 'Password Confirmation', 'required|matches[pass]');
             if ($this->form_validation->run() == FALSE) {
                 $this->load->view('test/Passing_data_signup');
             } else {
-                $id = $this->input->post('userid');
+                $email = $this->input->post('email');
                 $name = $this->input->post('name');
                 $pass = $this->input->post('pass');
-                $this->Passing_data_model->insert_user($id, $name, md5($pass)); //MD5
+                $this->Passing_data_model->insert_user($email, $name, md5($pass)); //MD5
                 redirect('passdata');
             }
         }
         public function signout() {
-            $this->session->unset_userdata(array('logged_in','user_id'));
-            redirect('passdata');
+            $this->session->unset_userdata(array('logged_in','email'));
+            $this->load->view('test/Passing_data_logout');
+            //redirect('passdata');
         }
         public function login_page() {
             $this->load->view('test/Passing_data_signin');

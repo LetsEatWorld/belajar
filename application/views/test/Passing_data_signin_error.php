@@ -31,7 +31,7 @@
         <p>
             Your User ID or Password you submit was incorrect! <br>
             Please
-            <a href="">Try again</a>
+            <a href="<?=base_url()?>test/Passing_data/login_page">Try again</a>
         </p>
     </div>
 
