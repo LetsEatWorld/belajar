@@ -89,6 +89,10 @@
             //redirect('/test/passing_data/status_detail/');
             redirect('passdata');
         }
+        public function edit_comment($id) {
+            $this->load->model('test/Passing_data_model');
+            
+        }
         public function status_detail(/*$id*/) {
             //$this->load->helper('url');
             //$this->load->library('session');

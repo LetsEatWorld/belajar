@@ -59,6 +59,10 @@
             font-family: Calibri;
             font-size: 10px;
         }
+        .logo {
+            font-family: Verdana;
+            font-weight: bolder;
+        }
     </style>
 </head>
 <body>
@@ -66,7 +70,7 @@
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Facebook</a>
+                <a class="navbar-brand" href="#">Tweeter</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#"><span class="glyphicon glyphicon-user"></span> <?= $this->session->email; ?></a></li>
@@ -78,7 +82,7 @@
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Facebook</a>
+                <a class="navbar-brand logo" href="#">fb</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#" data-toggle="modal" data-target="#signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>

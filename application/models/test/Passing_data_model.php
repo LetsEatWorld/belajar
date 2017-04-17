@@ -58,9 +58,17 @@ class Passing_data_model extends CI_Model {
     }
     public function join_status_comment_user($id = -1)
     {
-        $this->db->select('status.tanggal as s_tgl, comment.tanggal as c_tgl, status.message as s_msg,
-        status.message as s_msg, comment.message as c_msg,comment.status_id as c_sid, comment.comment_id as c_id,
-        comment.user_id as c_uid, comment.tanggal as c_tgl,user.name as u_name, user.email as u_email');
+        $this->db->select('status.tanggal as s_tgl, 
+                           comment.tanggal as c_tgl, 
+                           status.message as s_msg,
+                           status.message as s_msg,
+                           comment.message as c_msg,
+                           comment.status_id as c_sid, 
+                           comment.comment_id as c_id,
+                           comment.user_id as c_uid, 
+                           comment.tanggal as c_tgl,
+                           user.name as u_name, 
+                           user.email as u_email');
         $this->db->from('status');
         $this->db->join('comment', 'comment.status_id=status.status_id');
         $this->db->join('user', 'user.user_id=comment.user_id');
@@ -84,6 +92,10 @@ class Passing_data_model extends CI_Model {
     public function del_comment_where($id) {
         $this->db->where('comment_id',$id);
         $this->db->delete('comment');
+    }
+    public function edit_comment($id, $message) {
+        $data = array('message' => $message);
+        $this->db->update_string($data);
     }
     public function del_status_where($id) {
         //hapusstatus
