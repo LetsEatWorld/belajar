@@ -70,7 +70,7 @@
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Tweeter</a>
+                <a class="navbar-brand logo" href="#">fb</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#"><span class="glyphicon glyphicon-user"></span> <?= $this->session->email; ?></a></li>
@@ -202,6 +202,7 @@
                                 echo "<span> Posted by " . $sc['u_name'] . " </span>";
                                 echo "<span class=\"tanggal\">" . $sc['c_tgl'] . "</span>";
                                 if ($sc['u_email'] == $this->session->email) {
+                                    echo "<a href=\"" . base_url() . "test/passing_data/edit_comment_page/" . $sc['c_id'] . "\"" . "class=\"delete\">edit</a>";
                                     echo "<a href=\"" . base_url() . "test/passing_data/del_comment/" . $sc['c_id'] . "\"" . "class=\"delete\">delete</a>";
                                 }
                                 echo "<hr>";
@@ -216,7 +217,7 @@
                                 <input type="submit" class="btn btn-primary status-btn right" id="submit" value="Post">
                             </form>
                         <?php } else { ?>
-                            <form action="<?= base_url('')?>test/passing_data/signup_page" method="post">
+                            <form action="<?= base_url('')?>test/passing_data/login_page" method="post">
                                 <input type="text" class="form-control" name="comment" placeholder="Comment disini">
                                 <input type="submit" class="btn btn-primary status-btn right" id="submit" value="Post">
                             </form>

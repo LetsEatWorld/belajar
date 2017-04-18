@@ -93,17 +93,21 @@ class Passing_data_model extends CI_Model {
         $this->db->where('comment_id',$id);
         $this->db->delete('comment');
     }
-    public function edit_comment($id, $message) {
-        $data = array('message' => $message);
-        $this->db->update_string($data);
+    public function edit_comment($id, $comment, $date) {
+        $data = array('message' => $comment, 'tanggal' => $date);
+        $this->db->where('comment_id', $id);
+        $this->db->set($data);
+        $this->db->update('comment');
     }
     public function del_status_where($id) {
+        $this->db->trans_start();
         //hapusstatus
         $this->db->where('status_id',$id);
         $this->db->delete('status');
         //hapuscomment
         $this->db->where('status_id',$id);
         $this->db->delete('comment');
+        $this->db->trans_complete();
     }
     public function select_user_where($email, $pass) {
         $this->db->select('*');

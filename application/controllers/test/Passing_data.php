@@ -26,7 +26,7 @@
             } else {
                 $this->load->helper('date');
                 $status = $this->input->post('status');
-                $this->Passing_data_model->insert_status($this->session->email, $status, date('Y-m-d H:i'));
+                $this->Passing_data_model->insert_status($this->session->email, $status, date('Y-m-d H:i:s'));
                 redirect('passdata');
             }
         }
@@ -59,7 +59,7 @@
             } else {
                 $this->load->helper('date');
                 $comment = $this->input->post('comment');
-                $this->Passing_data_model->insert_comment($this->session->email, $comment, date('Y-m-d H:i'), $id);
+                $this->Passing_data_model->insert_comment($this->session->email, $comment, date('Y-m-d H:i:s'), $id);
                 redirect('passdata/');
             }
         }
@@ -91,7 +91,14 @@
         }
         public function edit_comment($id) {
             $this->load->model('test/Passing_data_model');
-            
+            $comment = $this->input->post('comment');
+            $this->form_validation->set_rules('comment','Comment','required');
+            if ($this->form_validation->run() == FALSE) {
+                redirect('test/Passing_data/edit_comment_page');
+            } else {
+                $this->Passing_data_model->edit_comment($id, $comment, date('Y-m-d H:i:s'));
+                redirect('passdata');
+            }
         }
         public function status_detail(/*$id*/) {
             //$this->load->helper('url');
@@ -148,6 +155,59 @@
                 redirect('passdata');
             }
         }
+        public function create_db() {
+            $this->load->dbforge();
+            $this->form_validation->set_rules('db_name', 'Database Name', 'required');
+            if($this->form_validation->run() == FALSE) {
+                redirect('test/passing_data/create_db_page');
+            } else {
+                $db_name = $this->input->post('db_name');
+                if ($this->dbforge->create_database($db_name)) {
+                    $this->load->view('test/db/Passing_data_create_table_view');
+                } else {
+                    redirect('test/passing_data/create_db_page');
+                }
+            }
+        }
+        public function create_table() {
+            $this->db->db_select('asdf');
+            $this->load->dbforge();
+            $this->form_validation->set_rules('table_name', 'Table Name', 'required');
+            if($this->form_validation->run() == FALSE) {
+                redirect('test/passing_data/create_table_page');
+            } else {
+                $table_name = $this->input->post('table_name');
+                $fields = array(
+                    'blog_id' => array(
+                        'type' => 'INT',
+                        'constraint' => 5,
+                        'unsigned' => TRUE,
+                        'auto_increment' => TRUE
+                    ),
+                    'blog_title' => array(
+                        'type' => 'VARCHAR',
+                        'constraint' => '100',
+                        'unique' => TRUE,
+                    ),
+                    'blog_author' => array(
+                        'type' =>'VARCHAR',
+                        'constraint' => '100',
+                        'default' => 'King of Town',
+                    ),
+                    'blog_description' => array(
+                        'type' => 'TEXT',
+                        'null' => TRUE,
+                    ),
+                );
+                $this->dbforge->add_key('blog_id', TRUE);
+                $this->dbforge->add_field($fields);
+                if ($this->dbforge->create_table($table_name)) {
+                    $this->load->view('test/db/Passing_data_create_col_view');
+                } else {
+                    redirect('test/passing_data/create_table_page');
+                }
+            }
+        }
         public function signout() {
             $this->session->unset_userdata(array('logged_in','email'));
             $this->load->view('test/Passing_data_logout');
@@ -155,6 +215,19 @@
         }
         public function login_page() {
             $this->load->view('test/Passing_data_signin');
+        }
+        public function edit_comment_page($id=-1) {
+            $this->session->set_userdata(array('current_c_id' => $id));
+            $this->load->view('test/Passing_data_c_edit_view');
+        }
+        public function create_db_page() {
+            $this->load->view('test/db/Passing_data_create_db_view');
+        }
+        public function create_table_page() {
+            $this->load->view('test/db/Passing_data_create_table_view');
+        }
+        public function create_col_page() {
+            $this->load->view('test/db/Passing_data_create_col_view');
         }
     }
 ?>
