@@ -124,5 +124,23 @@ class Passing_data_model extends CI_Model {
         );
         $this->db->insert('user', $data);
     }
+    public function get_field($table_name) {
+        $this->db->db_select($this->session->userdata('current_db'));
+        return $this->db->field_data($table_name);
+    }
+    public function get_data($table_name) {
+        $this->db->db_select($this->session->userdata('current_db'));
+        $this->db->select('*');
+        $this->db->from($table_name);
+        $query = $this->db->get()->result_array();
+        /*echo "<pre>";
+        print_r($query);
+        echo "</pre>";*/
+        return $query;
+    }
+    public function insert_row($db, $table, $data) {
+        $this->db->db_select($db);
+        $this->db->insert($table, $data);
+    }
 }
 ?>

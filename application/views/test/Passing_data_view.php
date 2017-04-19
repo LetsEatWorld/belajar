@@ -1,3 +1,30 @@
+<?php if($this->session->email == 'admin@admin.com') {?>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand logo" href="<?= base_url()?>/passdata">fb</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="<?= base_url(); ?>test/passing_data/create_db_page"><span class="glyphicon glyphicon-user"></span> <?= $this->session->email; ?></a></li>
+                <li><a href="<?=base_url()?>test/Passing_data/signout"><span class="glyphicon glyphicon-log-in""></span> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+<?php } elseif($this->session->logged_in && $this->session->email != 'admin@admin.com') {?>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand logo" href="<?= base_url()?>/passdata">fb</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-user"></span> <?= $this->session->email; ?></a></li>
+                <li><a href="<?=base_url()?>test/Passing_data/signout"><span class="glyphicon glyphicon-log-in""></span> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+<?php } else {
+    redirect('passdata');
+}; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,84 +40,59 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
-        table tr td, tr th {
+              table tr td, tr th {
             padding: 10px;
         }
-        .right {
+              .right {
             position: relative;
             left: 800px;
         }
-        .status-btn {
+              .status-btn {
             margin: 10px 0;
         }
-        .reply {
+              .reply {
             margin: 0 50px;
         }
         @keyframes hovered {
-            from {background-color: white;}
-            to {background-color: #ccc}
+              from {background-color: white;}
+              to {background-color: #ccc}
         }
-        .timeline {
-             padding: 10px;
-         }
-        .timeline:hover {
+              .timeline {
+            padding: 10px;
+        }
+              .timeline:hover {
             background-color: white;
             animation-name: hovered;
             animation-duration: 1s;
             animation-timing-function: ease-out;
         }
-        .comment-list {
+              .comment-list {
             margin-left: 50px;
         }
-        .delete {
+              .delete {
             position: relative;
             bottom: 0px;
             left: 100px;
             padding: 5px;
             border-radius: 10px;
         }
-        .delete:hover {
+              .delete:hover {
             background-color: white;
             animation-name: hovered;
             animation-duration: 1s;
             animation-timing-function: ease-out;
         }
-        .tanggal {
+              .tanggal {
             font-family: Calibri;
             font-size: 10px;
         }
-        .logo {
+              .logo {
             font-family: Verdana;
             font-weight: bolder;
         }
     </style>
 </head>
 <body>
-<?php if($this->session->logged_in) {?>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand logo" href="#">fb</a>
-            </div>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span> <?= $this->session->email; ?></a></li>
-                <li><a href="<?=base_url()?>test/Passing_data/signout"><span class="glyphicon glyphicon-log-in""></span> Logout</a></li>
-            </ul>
-        </div>
-    </nav>
-<?php } else { ?>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand logo" href="#">fb</a>
-            </div>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#" data-toggle="modal" data-target="#signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                <li><a href="#" data-toggle="modal" data-target="#login"><span class="glyphicon glyphicon-log-in""></span> Login</a></li>
-            </ul>
-        </div>
-    </nav>
-<?php }; ?>
 <div class="container">
     <!-- Modal -->
     <div class="modal fade" id="login" role="dialog">

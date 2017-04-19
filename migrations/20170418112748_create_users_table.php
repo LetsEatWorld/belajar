@@ -10,9 +10,9 @@ class Migration_Create_users_table extends CI_Migration {
     }
 
     public function up() {
-
+        $fields = array('');
     }
     public function down() {
-
+        
     }
 }

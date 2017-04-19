@@ -1,4 +1,16 @@
-<?php if($this->session->logged_in) {?>
+<?php if($this->session->email == 'admin@admin.com') {?>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand logo" href="<?= base_url()?>/passdata">fb</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="<?= base_url(); ?>test/passing_data/create_db_page"><span class="glyphicon glyphicon-user"></span> <?= $this->session->email; ?></a></li>
+                <li><a href="<?=base_url()?>test/Passing_data/signout"><span class="glyphicon glyphicon-log-in""></span> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+<?php } elseif($this->session->logged_in && $this->session->email != 'admin@admin.com') {?>
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -29,7 +41,7 @@
     <style>
         .right {
             position: relative;
-            left: 840px;
+            left: 91%;
             margin: 10px;
         }
         .form-group {

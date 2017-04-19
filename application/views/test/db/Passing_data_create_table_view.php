@@ -1,4 +1,16 @@
-<?php if($this->session->logged_in) {?>
+<?php if($this->session->email == 'admin@admin.com') {?>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand logo" href="<?= base_url()?>/passdata">fb</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="<?= base_url(); ?>test/passing_data/create_db_page"><span class="glyphicon glyphicon-user"></span> <?= $this->session->email; ?></a></li>
+                <li><a href="<?=base_url()?>test/Passing_data/signout"><span class="glyphicon glyphicon-log-in""></span> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+<?php } elseif($this->session->logged_in && $this->session->email != 'admin@admin.com') {?>
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -29,7 +41,7 @@
     <style>
         .right {
             position: relative;
-            left: 825px;
+            left: 94%;
             margin: 10px;
         }
         .form-group {
@@ -42,7 +54,6 @@
     </style>
 </head>
 <body>
-<?= date('YmdHis'); ?>
 <div class="container">
     <h1>Create Table</h1>
     <hr>
@@ -50,7 +61,7 @@
         <form action="<?= base_url(); ?>test/Passing_data/create_table" method="post">
             <!--<label for="comment">Comment : </label>-->
             <input type="text" class="form-control" name="table_name" placeholder="Nama table">
-            <input type="submit" class="btn btn-primary status-btn right" id="submit" value="Create Table">
+            <input type="submit" class="btn btn-primary status-btn right" id="submit" value="Next">
         </form>
     </div>
 </div>

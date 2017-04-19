@@ -164,49 +164,71 @@
                 $db_name = $this->input->post('db_name');
                 if ($this->dbforge->create_database($db_name)) {
                     $this->load->view('test/db/Passing_data_create_table_view');
+                    $this->session->set_userdata(array('current_db' => $db_name));
                 } else {
                     redirect('test/passing_data/create_db_page');
                 }
             }
         }
         public function create_table() {
-            $this->db->db_select('asdf');
-            $this->load->dbforge();
             $this->form_validation->set_rules('table_name', 'Table Name', 'required');
+            $table_name = $this->input->post('table_name');
+            if ($this->form_validation->run() == FALSE) {
+                redirect('passing_data/create_table_page');
+            } else {
+                $this->load->model('test/Passing_data_model');
+                $this->session->set_userdata('current_table', $table_name);
+                //$data['result'] = $this->Passing_data_model->get_field($this->session->userdata('current_table'));
+                $this->load->view('test/db/Passing_data_create_col_view');
+            }
+        }
+        public function create_col($table_name) {
+            $this->db->db_select($this->session->userdata('current_db'));
+            $this->load->dbforge();
+            $this->form_validation->set_rules('col_name', 'Column Name', 'required');
             if($this->form_validation->run() == FALSE) {
                 redirect('test/passing_data/create_table_page');
             } else {
-                $table_name = $this->input->post('table_name');
+                $col_name = $this->input->post('col_name');
+                $col_type = $this->input->post('col_type');
+                $col_constrain = $this->input->post('col_constrain');
+                $col_ai = $this->input->post('col_ai');
+                $col_pk = $this->input->post('col_pk');
                 $fields = array(
-                    'blog_id' => array(
-                        'type' => 'INT',
-                        'constraint' => 5,
-                        'unsigned' => TRUE,
-                        'auto_increment' => TRUE
-                    ),
-                    'blog_title' => array(
-                        'type' => 'VARCHAR',
-                        'constraint' => '100',
-                        'unique' => TRUE,
-                    ),
-                    'blog_author' => array(
-                        'type' =>'VARCHAR',
-                        'constraint' => '100',
-                        'default' => 'King of Town',
-                    ),
-                    'blog_description' => array(
-                        'type' => 'TEXT',
-                        'null' => TRUE,
-                    ),
+                    $col_name => array(
+                        'type' => $col_type,
+                        'constraint' => $col_constrain,
+                        'auto_increment' => $col_ai
+                    )
                 );
-                $this->dbforge->add_key('blog_id', TRUE);
-                $this->dbforge->add_field($fields);
-                if ($this->dbforge->create_table($table_name)) {
-                    $this->load->view('test/db/Passing_data_create_col_view');
+                $this->load->model('test/Passing_data_model');
+                if ($col_pk)
+                    $this->dbforge->add_key($col_name, TRUE);
+                if ($this->db->table_exists($this->session->userdata('current_table')) == FALSE) {
+                    $this->dbforge->add_field($fields);
+                    if ($this->dbforge->create_table($table_name)) {
+                        //redirect('test/passing_data/create_col_page');
+                        $data['result'] = $this->Passing_data_model->get_field($this->session->userdata('current_table'));
+                        $this->load->view('test/db/Passing_data_create_col_view', $data);
+                    } else {
+                        redirect('test/passing_data/create_table_page');
+                    }
                 } else {
-                    redirect('test/passing_data/create_table_page');
+                    $this->dbforge->add_column($this->session->userdata('current_table'), $fields);
+                    //redirect('test/passing_data/create_col_page');
+                    $data['result'] = $this->Passing_data_model->get_field($this->session->userdata('current_table'));
+                    $this->load->view('test/db/Passing_data_create_col_view', $data);
                 }
             }
+        }
+        public function insert_data() {
+            $this->load->model('test/Passing_data_model');
+            $db = $this->session->userdata('current_db');
+            $table = $this->session->userdata('current_table');
+            $col_data = $this->input->post('col_data[]');
+            $data = $col_data;
+            $this->Passing_data_model->insert_row($db, $table, $data);
+            redirect('test/Passing_data/insert_data_page');
         }
         public function signout() {
             $this->session->unset_userdata(array('logged_in','email'));
@@ -221,13 +243,30 @@
             $this->load->view('test/Passing_data_c_edit_view');
         }
         public function create_db_page() {
+            /*$prefs['template'] = array(
+                'table_open'           => '<table class="calendar">',
+                'cal_cell_start'       => '<td class="day">',
+                'cal_cell_start_today' => '<td class="today">'
+            );
+            $this->load->library('calendar', $prefs);
+            echo $this->calendar->generate();*/
+
             $this->load->view('test/db/Passing_data_create_db_view');
         }
         public function create_table_page() {
             $this->load->view('test/db/Passing_data_create_table_view');
         }
         public function create_col_page() {
-            $this->load->view('test/db/Passing_data_create_col_view');
+            $data['result'] = $this->Passing_data_model->get_field($this->session->userdata('current_table'));
+
+            $this->load->view('test/db/Passing_data_create_col_view', $data);
+        }
+        public function insert_data_page() {
+            $this->load->model('test/Passing_data_model');
+            $current_table = $this->session->userdata('current_table');
+            $data['result'] = $this->Passing_data_model->get_field($current_table);
+            $data['full_result'] = $this->Passing_data_model->get_data($current_table);
+            $this->load->view('test/db/Passing_data_insertdata_view', $data);
         }
     }
 ?>
