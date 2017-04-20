@@ -22,9 +22,88 @@
             </ul>
         </div>
     </nav>
-<?php } else {
-    redirect('passdata');
-}; ?>
+<?php } else { ?>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand logo" href="<?=base_url();?>passdata">fb</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" data-toggle="modal" data-target="#signup"><span class="glyphicon glyphicon-log-in""></span> Sign Up</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#login"><span class="glyphicon glyphicon-log-in""></span> Sign In</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="login" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Login</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="<?=base_url()?>test/passing_data/signin" method="post">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input id="email" type="email" class="form-control" name="email" placeholder="Enter your email">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input id="password" type="password" class="form-control" name="pass" placeholder="Enter your password">
+                        </div>
+                        <br>
+                        <Input type="Submit" class="btn btn-primary btn-block" value="Log In">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="signup" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Sign Up</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="<?=base_url()?>test/passing_data/signup" method="post">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input id="email" type="email" class="form-control" name="email" placeholder="Enter your email">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">@</span>
+                            <input id="name" type="text" class="form-control" name="name" placeholder="Enter your name">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input id="pass" type="password" class="form-control" name="pass" placeholder="Enter your password">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input id="repass" type="password" class="form-control" name="repass" placeholder="Retype Password">
+                        </div>
+                        <br>
+                        <Input type="Submit" class="btn btn-primary btn-block" value="Sign Up">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php }; ?>
 <!DOCTYPE html>
 <html>
 <head>
