@@ -69,7 +69,7 @@
             </div>
             <div class="col-sm-2">
                 <div class="checkbox">
-                    <label><input name="col_ai" type="checkbox">Auto Increment</label>
+                    <label><input name="col_ai" type="checkbox" value = 1>Auto Increment</label>
                 </div>
             </div>
             <div class="col-sm-2">

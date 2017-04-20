@@ -194,23 +194,15 @@
                 $col_constrain = $this->input->post('col_constrain');
                 $col_ai = $this->input->post('col_ai');
                 $col_pk = $this->input->post('col_pk');
-                if ($col_ai) {
-                    $fields = array(
-                        $col_name => array(
-                            'type' => $col_type,
-                            'constraint' => $col_constrain,
-                            'auto_increment' =>  TRUE
-                        )
-                    );
-                } else {
-                    $fields = array(
-                        $col_name => array(
-                            'type' => $col_type,
-                            'constraint' => $col_constrain,
-                            'auto_increment' =>  FALSE
-                        )
-                    );
-                }
+
+                $fields = array(
+                    $col_name => array(
+                        'type' => $col_type,
+                        'constraint' => $col_constrain,
+                        'auto_increment' => ($col_ai == 1 ? TRUE : FALSE)
+                    )
+                );
+
                 $this->load->model('test/Passing_data_model');
                 if ($col_pk)
                     $this->dbforge->add_key($col_name, TRUE);
